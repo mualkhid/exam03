@@ -76,57 +76,26 @@ int	ft_printf(const char *format, ...)
 	return (va_end(ptr), len);
 }
 
-
-void putstr(char *str, int *len)
+int main() 
 {
-	if(!str)
-		str = "(null)";
-	while(*str)
-		*len += write(1, str++, 1);
-}
+  int len = 0;
+  char *str = "Hello, world!";
+  int num = 42;
+  unsigned int hex_num = 0xDEADBEEF;
 
-void putnbr(long long int nbr, int base, int *len)
-{
-	char *hexa = "0123456789abcdef";
-	if (nbr < 0)
-	{
-		nbr *= -1;
-		*len += write(1, "-", 1);
-	}
-	if (nbr >= base)
-		putnbr((nbr / base), base, len);
-	*len += write(1, &hexa[nbr % base], 1);
-}
+  put_str(str, &len);
+  write(1, "\n", 1); 
+  
+  put_digit(num, 10, &len);
+  write(1, "\n", 1);
 
-int ft_printf(const char *format, ...)
-{
-	int len = 0;
-	va_list ptr;
+  put_digit(hex_num, 16, &len);
+  write(1, "\n", 1);
 
-	va_start(ptr, format);
-	while(*format)
-	{
-		if (*format == '%' && *(format + 1))
-		{
-			format++;
-			if (*format == 's')
-				put_str(va_arg(ptr, char *), len);
-			else if (*format == 'd')
-				putnbr((long long)va_arg(ptr, int), 10, len);
-			else if (*format == 'x')
-				putnbr((long long)va_arg(ptr, unsigned int), 16, len);
-		}
-		else 
-			len += write(1, format, 1);
-		format++;
-	}
-	va_end(ptr);
-	return(len);
-}
+  len = ft_printf("This is a formatted string with %d decimal and %x hexadecimal number\n", num, hex_num);
+  write(1, "Total characters printed: ", 27); // Assuming the string length is 27 (modify if different)
+  put_digit(len, 10, &len);
+  write(1, "\n", 1);
 
-
-int main(void)
-{
-	int len[] = 5;
-	ft_printf("%s\n", put_str("Munia", &len));
+  return 0;
 }
